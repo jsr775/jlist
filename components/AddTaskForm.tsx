@@ -7,6 +7,7 @@ import _ from 'lodash'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { InputGroup, InputGroupInput } from '@/components/ui/input-group'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
 
 interface AddTaskFormProps {
   onTaskAdded: () => void
@@ -56,8 +57,14 @@ export const AddTaskForm = ({ onTaskAdded }: AddTaskFormProps) => {
   }
 
   return (
-    <div className="mb-8 p-6 border rounded-lg bg-gray-50">
-      <h2 className="text-xl font-semibold mb-4">Add New Task</h2>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button>Add New Task</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Add New Task</DialogTitle>
+        </DialogHeader>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="title" className="block text-sm font-medium mb-1">
@@ -131,6 +138,7 @@ export const AddTaskForm = ({ onTaskAdded }: AddTaskFormProps) => {
           {loading ? 'Adding...' : 'Add Task'}
         </Button>
       </form>
-    </div>
+    </DialogContent>
+    </Dialog>
   )
 }

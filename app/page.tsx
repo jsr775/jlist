@@ -1,6 +1,5 @@
 'use client'
 
-import { AddTaskForm } from '@/components/AddTaskForm'
 import TasksTable from '@/components/TasksTable'
 
 const HomePage = () => {
