@@ -7,6 +7,8 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { ButtonGroup } from "./ui/button-group"
 import { Button } from "./ui/button"
 import _ from "lodash"
+import { Card, CardContent } from "./ui/card"
+import Timer from "./Timer"
 
 const TasksTable = () => {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -137,8 +139,18 @@ const TasksTable = () => {
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-6">Task List</h1>
       <p className="mb-6">Manage your tasks and track their progress.</p>
-      
+
+      <div className="flex justify-between items-center mb-4">
       <AddTaskForm onTaskAdded={fetchTasks} />
+      <Card >
+        <CardContent>
+          <div className="text-sm text-gray-600">
+            Total Tasks: <span className="font-medium">{tasks.length}</span>
+          </div>
+        </CardContent>
+      </Card>
+      </div>
+      
       
       <Table>
         <TableCaption>
@@ -215,6 +227,7 @@ const TasksTable = () => {
                       <FaCheck className="w-4 h-4" />
                     </Button>
                   </ButtonGroup>
+                <Timer />
                 </TableCell>
               </TableRow>
             ))
