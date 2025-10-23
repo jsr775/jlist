@@ -10,10 +10,18 @@ export interface Task {
   id: string
   title: string
   description?: string
-  completed: boolean
-  created_at: string
-  updated_at?: string
+  status?: 'todo' | 'in-progress' | 'done' | 'cancelled'
+  list_id?: number
+  start_date?: string
+  end_date?: string
+  duration: number | null
   due_date?: string
-  priority?: 'low' | 'medium' | 'high'
-  assigned_to?: string
+  priority?: 'low' | 'medium' | 'high' | 'urgent'
+}
+
+export interface TaskList {
+  id: number
+  name: string
+  description?: string
+  parent_id?: number
 }
