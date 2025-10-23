@@ -1,7 +1,11 @@
 import { supabase, Task } from "@/lib/supabase"
 import { useEffect, useState } from "react"
+import moment from "moment"
+import { FaTrash } from "react-icons/fa"
 import { AddTaskForm } from "./AddTaskForm"
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
+import { ButtonGroup } from "./ui/button-group"
+import { Button } from "./ui/button"
 
 const TasksTable = () => {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -32,8 +36,24 @@ const TasksTable = () => {
     }
   }
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString()
+  const formatDate = (dateString: string) => moment(dateString).format('MMM DD, YYYY')
+
+  const deleteTask = async (taskId: string) => {
+    try {
+      const { error } = await supabase
+        .from('tasks')
+        .delete()
+        .eq('id', taskId)
+
+      if (error) {
+        throw error
+      }
+
+      // Refresh the tasks list
+      fetchTasks()
+    } catch (err: any) {
+      setError(err.message || 'Failed to delete task')
+    }
   }
 
   const getPriorityBadgeClass = (priority?: string) => {
@@ -94,6 +114,7 @@ const TasksTable = () => {
             <TableHead>Dates</TableHead>
             <TableHead>Due</TableHead>
             <TableHead>Duration</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -116,7 +137,27 @@ const TasksTable = () => {
                   </span>
                 </TableCell>
                 <TableCell>
+                  {task.priority ? task.priority.charAt(0).toUpperCase() + task.priority.slice(1) : 'None'}
+                </TableCell>
+                <TableCell>
+                  {task.start_date ? formatDate(task.start_date) : '-'} - {task.end_date ? formatDate(task.end_date) : '-'}
+                </TableCell>
+                <TableCell>
                   {task.due_date ? formatDate(task.due_date) : '-'}
+                </TableCell>
+                <TableCell>
+                  {task.duration !== null ? `${task.duration} mins` : '-'}
+                </TableCell>
+                <TableCell>
+                  <ButtonGroup>
+                    <Button 
+                      variant="destructive" 
+                      size="sm"
+                      onClick={() => deleteTask(task.id)}
+                    >
+                      <FaTrash className="w-4 h-4" />
+                    </Button>
+                  </ButtonGroup>
                 </TableCell>
               </TableRow>
             ))
