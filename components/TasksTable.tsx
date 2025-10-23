@@ -1,7 +1,7 @@
 import { supabase, Task } from "@/lib/supabase"
 import { useEffect, useState } from "react"
 import moment from "moment"
-import { FaPause, FaPlay, FaTrash } from "react-icons/fa"
+import { FaCheck, FaPause, FaPlay, FaTrash } from "react-icons/fa"
 import { AddTaskForm } from "./AddTaskForm"
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
 import { ButtonGroup } from "./ui/button-group"
@@ -59,6 +59,24 @@ const TasksTable = () => {
       fetchTasks()
     } catch (err: any) {
       setError(err.message || 'Failed to toggle task timer')
+    }
+  }
+
+  const markTaskAsDone = async (taskId: string) => {
+    try {
+      const { error } = await supabase
+        .from('tasks')
+        .update({ status: 'done' })
+        .eq('id', taskId)
+
+      if (error) {
+        throw error
+      }
+
+      // Refresh the tasks list
+      fetchTasks()
+    } catch (err: any) {
+      setError(err.message || 'Failed to mark task as done')
     }
   }
 
@@ -156,12 +174,12 @@ const TasksTable = () => {
                   {task.description || '-'}
                 </TableCell>
                 <TableCell>
+                  {task.status ? task.status.charAt(0).toUpperCase() + task.status.slice(1) : 'Unknown'}
+                </TableCell>
+                <TableCell>
                   <span className={getPriorityBadgeClass(task.priority)}>
                     {task.priority ? task.priority.charAt(0).toUpperCase() + task.priority.slice(1) : 'None'}
                   </span>
-                </TableCell>
-                <TableCell>
-                  {task.priority ? task.priority.charAt(0).toUpperCase() + task.priority.slice(1) : 'None'}
                 </TableCell>
                 <TableCell>
                   {task.start_date ? formatDate(task.start_date) : '-'} - {task.end_date ? formatDate(task.end_date) : '-'}
@@ -188,6 +206,13 @@ const TasksTable = () => {
                       onClick={() => toggleTaskTimer(task.id)}
                     >
                       {task.is_timing ? <FaPause className="w-4 h-4" /> : <FaPlay className="w-4 h-4" />}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => markTaskAsDone(task.id)} 
+                    >
+                      <FaCheck className="w-4 h-4" />
                     </Button>
                   </ButtonGroup>
                 </TableCell>
