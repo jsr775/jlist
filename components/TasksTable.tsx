@@ -1,7 +1,7 @@
 import { supabase, Task } from "@/lib/supabase"
 import { useEffect, useState } from "react"
 import moment from "moment"
-import { FaCheck, FaPause, FaPlay, FaTrash } from "react-icons/fa"
+import { FaPlay, FaStop, FaTrash } from "react-icons/fa"
 import { AddTaskForm } from "./AddTaskForm"
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
 import { ButtonGroup } from "./ui/button-group"
@@ -9,8 +9,10 @@ import { Button } from "./ui/button"
 import _ from "lodash"
 import { Card, CardContent } from "./ui/card"
 import Timer from "./Timer"
+import useUserData from "@/hooks/userData"
 
 const TasksTable = () => {
+  const { userData, setActiveTask } = useUserData();
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -41,48 +43,7 @@ const TasksTable = () => {
 
   const formatDate = (dateString: string) => moment(dateString).format('MMM DD, YYYY')
 
-  const toggleTaskTimer = async (taskId: string) => {
-    try {
-      const task = _.find(tasks, { id: taskId })
-      if (!task) return
-
-      const newIsTiming = !task.is_timing
-
-      const { error } = await supabase
-        .from('tasks')
-        .update({ is_timing: newIsTiming })
-        .eq('id', taskId)
-
-      if (error) {
-        throw error
-      }
-
-      // Refresh the tasks list
-      fetchTasks()
-    } catch (err: any) {
-      setError(err.message || 'Failed to toggle task timer')
-    }
-  }
-
-  const markTaskAsDone = async (taskId: string) => {
-    try {
-      const { error } = await supabase
-        .from('tasks')
-        .update({ status: 'done' })
-        .eq('id', taskId)
-
-      if (error) {
-        throw error
-      }
-
-      // Refresh the tasks list
-      fetchTasks()
-    } catch (err: any) {
-      setError(err.message || 'Failed to mark task as done')
-    }
-  }
-
-  const deleteTask = async (taskId: string) => {
+  const deleteTask = async (taskId: number) => {
     try {
       const { error } = await supabase
         .from('tasks')
@@ -137,6 +98,15 @@ const TasksTable = () => {
 
   return (
     <div className="container mx-auto py-8">
+      <Card>
+        <CardContent>
+          <div className="text-sm text-gray-600">
+            Active Task ID: <span className="font-medium">{userData?.active_task ?? 'None'}</span>
+            <br />
+            Timer Started: <span className="font-medium">{userData?.timer_started ? moment(userData.timer_started).format('MMM DD, YYYY HH:mm:ss') : 'None'}</span>
+          </div>
+        </CardContent>
+      </Card>
       <h1 className="text-3xl font-bold mb-6">Task List</h1>
       <p className="mb-6">Manage your tasks and track their progress.</p>
 
@@ -211,20 +181,18 @@ const TasksTable = () => {
                     >
                       <FaTrash className="w-4 h-4" />
                     </Button>
-                    {/* Button to toggle timer */}
                     <Button
-                      variant="outline"
                       size="sm"
-                      onClick={() => toggleTaskTimer(task.id)}
+                      variant='outline'
+                      onClick={async () => {
+                        try {
+                          await setActiveTask(userData?.active_task === task.id ? null : task.id);
+                        } catch (error) {
+                          console.error('Error setting active task:', error);
+                        }
+                      }}
                     >
-                      {task.is_timing ? <FaPause className="w-4 h-4" /> : <FaPlay className="w-4 h-4" />}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => markTaskAsDone(task.id)} 
-                    >
-                      <FaCheck className="w-4 h-4" />
+                      {userData?.active_task === task.id ? <FaStop className="w-4 h-4 text-red-500" /> : <FaPlay className="w-4 h-4 text-green-500" />}
                     </Button>
                   </ButtonGroup>
                 <Timer />

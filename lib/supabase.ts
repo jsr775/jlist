@@ -7,7 +7,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 // Define the Task type based on your Supabase tasks table
 export interface Task {
-  id: string
+  id: number
   title: string
   description?: string
   status?: 'todo' | 'in-progress' | 'done' | 'cancelled'
