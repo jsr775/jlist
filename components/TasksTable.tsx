@@ -1,11 +1,12 @@
 import { supabase, Task } from "@/lib/supabase"
 import { useEffect, useState } from "react"
 import moment from "moment"
-import { FaTrash } from "react-icons/fa"
+import { FaPause, FaPlay, FaTrash } from "react-icons/fa"
 import { AddTaskForm } from "./AddTaskForm"
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
 import { ButtonGroup } from "./ui/button-group"
 import { Button } from "./ui/button"
+import _ from "lodash"
 
 const TasksTable = () => {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -37,6 +38,29 @@ const TasksTable = () => {
   }
 
   const formatDate = (dateString: string) => moment(dateString).format('MMM DD, YYYY')
+
+  const toggleTaskTimer = async (taskId: string) => {
+    try {
+      const task = _.find(tasks, { id: taskId })
+      if (!task) return
+
+      const newIsTiming = !task.is_timing
+
+      const { error } = await supabase
+        .from('tasks')
+        .update({ is_timing: newIsTiming })
+        .eq('id', taskId)
+
+      if (error) {
+        throw error
+      }
+
+      // Refresh the tasks list
+      fetchTasks()
+    } catch (err: any) {
+      setError(err.message || 'Failed to toggle task timer')
+    }
+  }
 
   const deleteTask = async (taskId: string) => {
     try {
@@ -156,6 +180,14 @@ const TasksTable = () => {
                       onClick={() => deleteTask(task.id)}
                     >
                       <FaTrash className="w-4 h-4" />
+                    </Button>
+                    {/* Button to toggle timer */}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => toggleTaskTimer(task.id)}
+                    >
+                      {task.is_timing ? <FaPause className="w-4 h-4" /> : <FaPlay className="w-4 h-4" />}
                     </Button>
                   </ButtonGroup>
                 </TableCell>

@@ -17,6 +17,8 @@ export interface Task {
   duration: number | null // in minutes
   due_date?: string
   priority?: 'low' | 'medium' | 'high' | 'urgent'
+  is_timing?: boolean
+  rank?: number
 }
 
 export interface TaskList {

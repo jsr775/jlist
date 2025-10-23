@@ -3,8 +3,10 @@
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import _ from 'lodash'
 import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { InputGroup, InputGroupInput } from '@/components/ui/input-group'
 
 interface AddTaskFormProps {
   onTaskAdded: () => void
@@ -61,14 +63,16 @@ export const AddTaskForm = ({ onTaskAdded }: AddTaskFormProps) => {
           <label htmlFor="title" className="block text-sm font-medium mb-1">
             Title *
           </label>
-          <Input
-            id="title"
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-            placeholder="Enter task title"
-          />
+          <InputGroup>
+            <InputGroupInput
+              id="title"
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+              placeholder="Enter task title"
+            />
+          </InputGroup>
         </div>
 
         <div>
@@ -89,28 +93,34 @@ export const AddTaskForm = ({ onTaskAdded }: AddTaskFormProps) => {
             <label htmlFor="priority" className="block text-sm font-medium mb-1">
               Priority
             </label>
-            <select
-              id="priority"
-              value={priority}
-              onChange={(e) => setPriority(e.target.value as 'low' | 'medium' | 'high')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-            </select>
+            <Select value={priority} onValueChange={(value) => setPriority(value as 'low' | 'medium' | 'high' | 'urgent')}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select priority" />
+              </SelectTrigger>
+              <SelectContent>
+                {
+                  _.map(['low', 'medium', 'high', 'urgent'], (level) => (
+                    <SelectItem key={level} value={level}>
+                      {level.charAt(0).toUpperCase() + level.slice(1)}
+                    </SelectItem>
+                  ))
+                }
+              </SelectContent>
+            </Select>
           </div>
 
           <div>
             <label htmlFor="dueDate" className="block text-sm font-medium mb-1">
               Due Date
             </label>
-            <Input
-              id="dueDate"
-              type="date"
-              value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
-            />
+            <InputGroup>
+              <InputGroupInput
+                id="dueDate"
+                type="date"
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+              />
+            </InputGroup>
           </div>
         </div>
 
