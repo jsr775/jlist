@@ -93,6 +93,7 @@ const TasksTable = () => {
             <TableHead>Priority</TableHead>
             <TableHead>Dates</TableHead>
             <TableHead>Due</TableHead>
+            <TableHead>Duration</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

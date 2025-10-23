@@ -14,7 +14,7 @@ export interface Task {
   list_id?: number
   start_date?: string
   end_date?: string
-  duration: number | null
+  duration: number | null // in minutes
   due_date?: string
   priority?: 'low' | 'medium' | 'high' | 'urgent'
 }
@@ -24,4 +24,12 @@ export interface TaskList {
   name: string
   description?: string
   parent_id?: number
+}
+
+export interface TaskLog {
+  id: string
+  task_id: string
+  start_time: string
+  end_time: string
+  notes?: string
 }
