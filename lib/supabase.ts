@@ -14,7 +14,8 @@ export interface Task {
   list_id?: number
   start_date?: string
   end_date?: string
-  duration: number | null // in minutes
+  estimated_duration: number | null // in minutes
+  actual_duration: number | null // in minutes
   due_date?: string
   priority?: 'low' | 'medium' | 'high' | 'urgent'
   is_timing?: boolean

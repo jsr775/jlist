@@ -6,11 +6,9 @@ import { AddTaskForm } from "./AddTaskForm"
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
 import { ButtonGroup } from "./ui/button-group"
 import { Button } from "./ui/button"
-import _ from "lodash"
 import { Card, CardContent } from "./ui/card"
 import Timer from "./Timer"
 import useUserData from "@/hooks/userData"
-import useTask from "@/hooks/useTask"
 import MainTaskTimer from "./MainTaskTimer"
 
 const TasksTable = () => {
@@ -24,8 +22,9 @@ const TasksTable = () => {
   }, [])
 
   const fetchTasks = async () => {
+    setLoading(true)
+
     try {
-      setLoading(true)
       const { data, error } = await supabase
         .from('tasks')
         .select('*')
@@ -36,8 +35,8 @@ const TasksTable = () => {
       }
 
       setTasks(data || [])
-    } catch (err: any) {
-      setError(err.message || 'Failed to fetch tasks')
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch tasks')
     } finally {
       setLoading(false)
     }
@@ -58,8 +57,8 @@ const TasksTable = () => {
 
       // Refresh the tasks list
       fetchTasks()
-    } catch (err: any) {
-      setError(err.message || 'Failed to delete task')
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to delete task')
     }
   }
 
@@ -134,7 +133,8 @@ const TasksTable = () => {
             <TableHead>Priority</TableHead>
             <TableHead>Dates</TableHead>
             <TableHead>Due</TableHead>
-            <TableHead>Duration</TableHead>
+            <TableHead>Estimated Duration</TableHead>
+            <TableHead>Actual Duration</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -167,7 +167,10 @@ const TasksTable = () => {
                   {task.due_date ? formatDate(task.due_date) : '-'}
                 </TableCell>
                 <TableCell>
-                  {task.duration !== null ? `${task.duration} mins` : '-'}
+                  {task.estimated_duration !== null ? `${task.estimated_duration} mins` : '-'}
+                </TableCell>
+                <TableCell>
+                  {task.actual_duration !== null ? `${task.actual_duration} mins` : '-'}
                 </TableCell>
                 <TableCell>
                   <ButtonGroup>
