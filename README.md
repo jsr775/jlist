@@ -20,6 +20,7 @@ A Next.js task management application with Supabase integration.
 ### Environment Setup
 
 Make sure your `.env` file contains:
+
 ```
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
@@ -34,11 +35,13 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ### Installation
 
 1. Install dependencies:
+
 ```bash
 npm install
 ```
 
 2. Run the development server:
+
 ```bash
 npm run dev
 ```
@@ -66,6 +69,7 @@ npm run dev
 ## Task Schema
 
 The tasks table includes the following fields:
+
 - `id`: UUID primary key
 - `title`: Task title (required)
 - `description`: Optional task description

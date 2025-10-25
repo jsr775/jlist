@@ -1,86 +1,86 @@
-import { supabase, Task } from "@/lib/supabase";
-import _ from "lodash";
-import { Moment } from "moment";
-import { useEffect, useState } from "react";
+import { supabase, Task } from '@/lib/supabase'
+import _ from 'lodash'
+import { Moment } from 'moment'
+import { useEffect, useState } from 'react'
 
 interface UseTasksProps {
-  taskId: number | null;
+  taskId: number | null
 }
 
 const useTask = ({ taskId }: UseTasksProps) => {
-  const [task, setTask] = useState<Task | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [task, setTask] = useState<Task | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const fetchTaskById = async (taskId: number) => {
-    setIsLoading(true);
-    
-    try{
+    setIsLoading(true)
+
+    try {
       const { data, error } = await supabase
         .from('tasks')
         .select('*')
         .eq('id', taskId)
-        .single();
+        .single()
 
       if (error) {
-        throw new Error(error.message);
+        throw new Error(error.message)
       }
 
-    setTask(data);
-  }  catch (error) {
-    console.error('Error fetching task:', error);
-  } finally {
-    setIsLoading(false);
+      setTask(data)
+    } catch (error) {
+      console.error('Error fetching task:', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  };
-
-
   const handleTaskStart = async () => {
-    if (!task) return;
+    if (!task) return
 
     try {
       const { data, error } = await supabase
         .from('tasks')
         .update({
-          is_timing: true
+          is_timing: true,
         })
         .eq('id', task.id)
         .select('*')
-        .single();
-
+        .single()
 
       if (error) {
-        throw new Error(error.message);
+        throw new Error(error.message)
       }
 
-      setTask(data);
+      setTask(data)
     } catch (error) {
-      console.error('Error starting task timer:', error);
+      console.error('Error starting task timer:', error)
     }
   }
 
   const handleTaskStop = async (startTime: Moment, endTime: Moment) => {
-    if (!task) return;
+    if (!task) return
 
-    const actual_duration = _.sum([task.actual_duration || 0, endTime.diff(startTime, 'minutes')]);
+    const actual_duration = _.sum([
+      task.actual_duration || 0,
+      endTime.diff(startTime, 'minutes'),
+    ])
 
     try {
       const { data, error } = await supabase
         .from('tasks')
         .update({
           actual_duration,
-          is_timing: false
+          is_timing: false,
         })
         .eq('id', task.id)
-        .single();
+        .single()
 
       if (error) {
-        throw new Error(error.message);
+        throw new Error(error.message)
       }
 
-      setTask(data);
+      setTask(data)
     } catch (error) {
-      console.error('Error stopping task timer:', error);
+      console.error('Error stopping task timer:', error)
     }
   }
 
@@ -88,10 +88,9 @@ const useTask = ({ taskId }: UseTasksProps) => {
     if (taskId !== null) {
       fetchTaskById(taskId)
     }
-    
-  },[taskId]);
+  }, [taskId])
 
-  return { task, isLoading, fetchTaskById, handleTaskStop, handleTaskStart };
+  return { task, isLoading, fetchTaskById, handleTaskStop, handleTaskStart }
 }
 
-export default useTask;
+export default useTask

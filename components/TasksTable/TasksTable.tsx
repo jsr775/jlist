@@ -1,24 +1,29 @@
-import { supabase, Task } from "@/lib/supabase"
-import { useEffect, useState } from "react"
-import moment from "moment"
-import { FaTrash } from "react-icons/fa"
-import useUserData from "@/hooks/userData"
-import _ from "lodash"
-import MainTaskTimer from "@/components/MainTaskTimer"
-import { AddTaskForm } from "@/components/AddTaskForm"
-import { Card, CardContent } from "@/components/ui/card"
-import { Table, TableCaption, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
-import { ButtonGroup } from "@/components/ui/button-group"
-import { Button } from "@/components/ui/button"
+import { AddTaskForm } from '@/components/AddTaskForm'
+import MainTaskTimer from '@/components/MainTaskTimer'
+import TaskRow from '@/components/TasksTable/TaskRow'
+import { Card, CardContent } from '@/components/ui/card'
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import useUserData from '@/hooks/userData'
+import { supabase, Task } from '@/lib/supabase'
+import _ from 'lodash'
+import { useEffect, useState } from 'react'
 
 const TasksTable = () => {
-  const { userData, setActiveTask } = useUserData();
+  const { userData, setActiveTask } = useUserData()
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetchTasks();
+    fetchTasks()
   }, [])
 
   const fetchTasks = async () => {
@@ -41,15 +46,9 @@ const TasksTable = () => {
       setLoading(false)
     }
   }
-
-  const formatDate = (dateString: string) => moment(dateString).format('MMM DD, YYYY')
-
   const deleteTask = async (taskId: number) => {
     try {
-      const { error } = await supabase
-        .from('tasks')
-        .delete()
-        .eq('id', taskId)
+      const { error } = await supabase.from('tasks').delete().eq('id', taskId)
 
       if (error) {
         throw error
@@ -62,25 +61,12 @@ const TasksTable = () => {
     }
   }
 
-  const getPriorityBadgeClass = (priority?: string) => {
-    switch (priority) {
-      case 'high':
-        return 'bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs'
-      case 'medium':
-        return 'bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs'
-      case 'low':
-        return 'bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs'
-      default:
-        return 'bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs'
-    }
-  }
-
   if (loading) {
     return (
-      <div className="container mx-auto py-8">
-        <h1 className="text-3xl font-bold mb-6">Task List</h1>
-        <div className="flex justify-center items-center h-64">
-          <div className="text-lg">Loading tasks...</div>
+      <div className='container mx-auto py-8'>
+        <h1 className='text-3xl font-bold mb-6'>Task List</h1>
+        <div className='flex justify-center items-center h-64'>
+          <div className='text-lg'>Loading tasks...</div>
         </div>
       </div>
     )
@@ -88,9 +74,9 @@ const TasksTable = () => {
 
   if (error) {
     return (
-      <div className="container mx-auto py-8">
-        <h1 className="text-3xl font-bold mb-6">Task List</h1>
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+      <div className='container mx-auto py-8'>
+        <h1 className='text-3xl font-bold mb-6'>Task List</h1>
+        <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded'>
           <strong>Error:</strong> {error}
         </div>
       </div>
@@ -98,32 +84,32 @@ const TasksTable = () => {
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <MainTaskTimer {...{
-        activeTaskId: userData?.active_task,
-        timerStarted: userData?.timer_started
-      }}/>
-      <h1 className="text-3xl font-bold mb-6">Task List</h1>
-      <p className="mb-6">Manage your tasks and track their progress.</p>
+    <div className='container mx-auto py-8'>
+      <MainTaskTimer
+        {...{
+          activeTaskId: userData?.active_task,
+          timerStarted: userData?.timer_started,
+        }}
+      />
+      <h1 className='text-3xl font-bold mb-6'>Task List</h1>
+      <p className='mb-6'>Manage your tasks and track their progress.</p>
 
-      <div className="flex justify-between items-center mb-4">
-      <AddTaskForm onTaskAdded={fetchTasks} />
-      <Card >
-        <CardContent>
-          <div className="text-sm text-gray-600">
-            Total Tasks: <span className="font-medium">{tasks.length}</span>
-          </div>
-        </CardContent>
-      </Card>
+      <div className='flex justify-between items-center mb-4'>
+        <AddTaskForm onTaskAdded={fetchTasks} />
+        <Card>
+          <CardContent>
+            <div className='text-sm text-gray-600'>
+              Total Tasks: <span className='font-medium'>{tasks.length}</span>
+            </div>
+          </CardContent>
+        </Card>
       </div>
-      
-      
+
       <Table>
         <TableCaption>
-          {tasks.length > 0 
+          {tasks.length > 0
             ? `A list of ${tasks.length} tasks from your database`
-            : 'No tasks found. Create your first task!'
-          }
+            : 'No tasks found. Create your first task!'}
         </TableCaption>
         <TableHeader>
           <TableRow>
@@ -141,49 +127,20 @@ const TasksTable = () => {
         <TableBody>
           {tasks.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+              <TableCell colSpan={6} className='text-center py-8 text-gray-500'>
                 No tasks found. Start by creating your first task!
               </TableCell>
             </TableRow>
           ) : (
-          _.map(tasks,(task) => (
-              <TableRow key={task.id} onClick={() => setActiveTask(task.id)}>
-                <TableCell className="font-medium">{task.title}</TableCell>
-                <TableCell className="max-w-xs truncate">
-                  {task.description || '-'}
-                </TableCell>
-                <TableCell>
-                  {task.status ? task.status.charAt(0).toUpperCase() + task.status.slice(1) : 'Unknown'}
-                </TableCell>
-                <TableCell>
-                  <span className={getPriorityBadgeClass(task.priority)}>
-                    {task.priority ? task.priority.charAt(0).toUpperCase() + task.priority.slice(1) : 'None'}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  {task.start_date ? formatDate(task.start_date) : '-'} - {task.end_date ? formatDate(task.end_date) : '-'}
-                </TableCell>
-                <TableCell>
-                  {task.due_date ? formatDate(task.due_date) : '-'}
-                </TableCell>
-                <TableCell>
-                  {task.estimated_duration !== null ? `${task.estimated_duration} mins` : '-'}
-                </TableCell>
-                <TableCell>
-                  {task.actual_duration !== null ? `${task.actual_duration} mins` : '-'}
-                </TableCell>
-                <TableCell>
-                  <ButtonGroup>
-                    <Button 
-                      variant="destructive" 
-                      size="sm"
-                      onClick={() => deleteTask(task.id)}
-                    >
-                      <FaTrash className="w-4 h-4" />
-                    </Button>
-                  </ButtonGroup>
-                </TableCell>
-              </TableRow>
+            _.map(tasks, task => (
+              <TaskRow
+                key={task.id}
+                {...{
+                  task,
+                  onClick: setActiveTask,
+                  onDelete: deleteTask,
+                }}
+              />
             ))
           )}
         </TableBody>

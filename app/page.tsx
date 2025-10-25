@@ -3,9 +3,7 @@
 import TasksTable from '@/components/TasksTable'
 
 const HomePage = () => {
-  return (
-      <TasksTable />
-  )
+  return <TasksTable />
 }
 
 export default HomePage

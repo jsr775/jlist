@@ -1,3 +1,3 @@
-import TasksTable from "./TasksTable";
+import TasksTable from './TasksTable'
 
-export default TasksTable;
+export default TasksTable
