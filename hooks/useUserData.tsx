@@ -34,6 +34,7 @@ const useUserData = () => {
     const fetchUserData = async () => {
       const { data, error } = await supabase.from('user_data').select('*').single()
 
+      // ignore "no rows found" error `PGRST116` to allow for initial empty state
       if (error?.code !== 'PGRST116') {
         throw new Error(error?.message)
       }
