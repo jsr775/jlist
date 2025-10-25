@@ -34,8 +34,8 @@ const useUserData = () => {
     const fetchUserData = async () => {
       const { data, error } = await supabase.from('user_data').select('*').single()
 
-      if (error) {
-        throw new Error(error.message)
+      if (error?.code !== 'PGRST116') {
+        throw new Error(error?.message)
       }
 
       setUserData(data)
