@@ -32,10 +32,7 @@ const useUserData = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const { data, error } = await supabase
-        .from('user_data')
-        .select('*')
-        .single()
+      const { data, error } = await supabase.from('user_data').select('*').single()
 
       if (error) {
         throw new Error(error.message)

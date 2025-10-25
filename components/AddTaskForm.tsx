@@ -5,21 +5,9 @@ import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import _ from 'lodash'
 import { Textarea } from '@/components/ui/textarea'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { InputGroup, InputGroupInput } from '@/components/ui/input-group'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from './ui/dialog'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog'
 
 interface AddTaskFormProps {
   onTaskAdded: () => void
@@ -28,9 +16,7 @@ interface AddTaskFormProps {
 export const AddTaskForm = ({ onTaskAdded }: AddTaskFormProps) => {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [priority, setPriority] = useState<
-    'low' | 'medium' | 'high' | 'urgent'
-  >('medium')
+  const [priority, setPriority] = useState<'low' | 'medium' | 'high' | 'urgent'>('medium')
   const [dueDate, setDueDate] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -95,10 +81,7 @@ export const AddTaskForm = ({ onTaskAdded }: AddTaskFormProps) => {
           </div>
 
           <div>
-            <label
-              htmlFor='description'
-              className='block text-sm font-medium mb-1'
-            >
+            <label htmlFor='description' className='block text-sm font-medium mb-1'>
               Description
             </label>
             <Textarea
@@ -112,17 +95,12 @@ export const AddTaskForm = ({ onTaskAdded }: AddTaskFormProps) => {
 
           <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
             <div>
-              <label
-                htmlFor='priority'
-                className='block text-sm font-medium mb-1'
-              >
+              <label htmlFor='priority' className='block text-sm font-medium mb-1'>
                 Priority
               </label>
               <Select
                 value={priority}
-                onValueChange={value =>
-                  setPriority(value as 'low' | 'medium' | 'high' | 'urgent')
-                }
+                onValueChange={value => setPriority(value as 'low' | 'medium' | 'high' | 'urgent')}
               >
                 <SelectTrigger className='w-full'>
                   <SelectValue placeholder='Select priority' />
@@ -138,19 +116,11 @@ export const AddTaskForm = ({ onTaskAdded }: AddTaskFormProps) => {
             </div>
 
             <div>
-              <label
-                htmlFor='dueDate'
-                className='block text-sm font-medium mb-1'
-              >
+              <label htmlFor='dueDate' className='block text-sm font-medium mb-1'>
                 Due Date
               </label>
               <InputGroup>
-                <InputGroupInput
-                  id='dueDate'
-                  type='date'
-                  value={dueDate}
-                  onChange={e => setDueDate(e.target.value)}
-                />
+                <InputGroupInput id='dueDate' type='date' value={dueDate} onChange={e => setDueDate(e.target.value)} />
               </InputGroup>
             </div>
           </div>

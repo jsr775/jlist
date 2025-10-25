@@ -14,13 +14,7 @@ interface TimerProps {
   estimatedDuration?: number
 }
 
-const Timer = ({
-  activeTask,
-  onStart,
-  onStop,
-  size,
-  estimatedDuration,
-}: TimerProps) => {
+const Timer = ({ activeTask, onStart, onStop, size, estimatedDuration }: TimerProps) => {
   const [elapsedTime, setElapsedTime] = useState(
     activeTask?.actual_duration ? activeTask.actual_duration * 60 * 1000 : 0
   )
@@ -43,28 +37,18 @@ const Timer = ({
       <div
         className={clsx(
           'font-mono mr-4 justify-center items-center flex',
-          size === 'small'
-            ? 'text-sm'
-            : size === 'large'
-              ? 'text-2xl'
-              : 'text-lg'
+          size === 'small' ? 'text-sm' : size === 'large' ? 'text-2xl' : 'text-lg'
         )}
       >
         {activeTask.is_timing
           ? moment.utc(elapsedTime).format('HH:mm:ss.SS')
-          : moment
-              .utc((activeTask.actual_duration ?? 0) * 60 * 1000)
-              .format('HH:mm:ss')}
+          : moment.utc((activeTask.actual_duration ?? 0) * 60 * 1000).format('HH:mm:ss')}
       </div>
       {estimatedDuration && (
         <div
           className={clsx(
             'font-mono mr-4 justify-center items-center flex',
-            size === 'small'
-              ? 'text-sm'
-              : size === 'large'
-                ? 'text-2xl'
-                : 'text-lg'
+            size === 'small' ? 'text-sm' : size === 'large' ? 'text-2xl' : 'text-lg'
           )}
         >
           / {moment.utc(estimatedDuration).format('HH:mm:ss.SS')}
@@ -81,11 +65,7 @@ const Timer = ({
           }
         }}
       >
-        {activeTask.is_timing ? (
-          <FaStop className='text-red-500' />
-        ) : (
-          <FaPlay className='text-green-500' />
-        )}
+        {activeTask.is_timing ? <FaStop className='text-red-500' /> : <FaPlay className='text-green-500' />}
       </Button>
     </div>
   )

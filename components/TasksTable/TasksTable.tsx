@@ -2,15 +2,7 @@ import { AddTaskForm } from '@/components/AddTaskForm'
 import MainTaskTimer from '@/components/MainTaskTimer'
 import TaskRow from '@/components/TasksTable/TaskRow'
 import { Card, CardContent } from '@/components/ui/card'
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import useUserData from '@/hooks/userData'
 import { supabase, Task } from '@/lib/supabase'
 import _ from 'lodash'
@@ -30,10 +22,7 @@ const TasksTable = () => {
     setLoading(true)
 
     try {
-      const { data, error } = await supabase
-        .from('tasks')
-        .select('*')
-        .order('id', { ascending: false })
+      const { data, error } = await supabase.from('tasks').select('*').order('id', { ascending: false })
 
       if (error) {
         throw error

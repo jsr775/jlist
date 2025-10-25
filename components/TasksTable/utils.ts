@@ -13,7 +13,6 @@ const getPriorityBadgeClass = (priority?: string) => {
   }
 }
 
-const formatDate = (dateString: string) =>
-  moment(dateString).format('MMM DD, YYYY')
+const formatDate = (dateString: string) => moment(dateString).format('MMM DD, YYYY')
 
-export { getPriorityBadgeClass, formatDate }
+export { formatDate, getPriorityBadgeClass }

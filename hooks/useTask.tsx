@@ -15,11 +15,7 @@ const useTask = ({ taskId }: UseTasksProps) => {
     setIsLoading(true)
 
     try {
-      const { data, error } = await supabase
-        .from('tasks')
-        .select('*')
-        .eq('id', taskId)
-        .single()
+      const { data, error } = await supabase.from('tasks').select('*').eq('id', taskId).single()
 
       if (error) {
         throw new Error(error.message)
@@ -59,10 +55,7 @@ const useTask = ({ taskId }: UseTasksProps) => {
   const handleTaskStop = async (startTime: Moment, endTime: Moment) => {
     if (!task) return
 
-    const actual_duration = _.sum([
-      task.actual_duration || 0,
-      endTime.diff(startTime, 'minutes'),
-    ])
+    const actual_duration = _.sum([task.actual_duration || 0, endTime.diff(startTime, 'minutes')])
 
     try {
       const { data, error } = await supabase
