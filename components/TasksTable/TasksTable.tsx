@@ -1,14 +1,15 @@
 import { supabase, Task } from "@/lib/supabase"
 import { useEffect, useState } from "react"
 import moment from "moment"
-import { FaPlay, FaStop, FaTrash } from "react-icons/fa"
-import { AddTaskForm } from "./AddTaskForm"
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "./ui/table"
-import { ButtonGroup } from "./ui/button-group"
-import { Button } from "./ui/button"
-import { Card, CardContent } from "./ui/card"
+import { FaTrash } from "react-icons/fa"
 import useUserData from "@/hooks/userData"
-import MainTaskTimer from "./MainTaskTimer"
+import _ from "lodash"
+import MainTaskTimer from "@/components/MainTaskTimer"
+import { AddTaskForm } from "@/components/AddTaskForm"
+import { Card, CardContent } from "@/components/ui/card"
+import { Table, TableCaption, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
+import { ButtonGroup } from "@/components/ui/button-group"
+import { Button } from "@/components/ui/button"
 
 const TasksTable = () => {
   const { userData, setActiveTask } = useUserData();
@@ -145,8 +146,8 @@ const TasksTable = () => {
               </TableCell>
             </TableRow>
           ) : (
-            tasks.map((task) => (
-              <TableRow key={task.id}>
+          _.map(tasks,(task) => (
+              <TableRow key={task.id} onClick={() => setActiveTask(task.id)}>
                 <TableCell className="font-medium">{task.title}</TableCell>
                 <TableCell className="max-w-xs truncate">
                   {task.description || '-'}
@@ -179,19 +180,6 @@ const TasksTable = () => {
                       onClick={() => deleteTask(task.id)}
                     >
                       <FaTrash className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant='outline'
-                      onClick={async () => {
-                        try {
-                          await setActiveTask(userData?.active_task === task.id ? null : task.id);
-                        } catch (error) {
-                          console.error('Error setting active task:', error);
-                        }
-                      }}
-                    >
-                      {userData?.active_task === task.id ? <FaStop className="w-4 h-4 text-red-500" /> : <FaPlay className="w-4 h-4 text-green-500" />}
                     </Button>
                   </ButtonGroup>
                 </TableCell>

@@ -4,5 +4,7 @@
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": "always"
-    }
+    },
+    // typeScript preferences can be added here
+    "typescript.preferences.importModuleSpecifier": "non-relative"
 }
