@@ -10,6 +10,8 @@ import _ from "lodash"
 import { Card, CardContent } from "./ui/card"
 import Timer from "./Timer"
 import useUserData from "@/hooks/userData"
+import useTask from "@/hooks/useTask"
+import MainTaskTimer from "./MainTaskTimer"
 
 const TasksTable = () => {
   const { userData, setActiveTask } = useUserData();
@@ -18,7 +20,7 @@ const TasksTable = () => {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetchTasks()
+    fetchTasks();
   }, [])
 
   const fetchTasks = async () => {
@@ -98,15 +100,10 @@ const TasksTable = () => {
 
   return (
     <div className="container mx-auto py-8">
-      <Card>
-        <CardContent>
-          <div className="text-sm text-gray-600">
-            Active Task ID: <span className="font-medium">{userData?.active_task ?? 'None'}</span>
-            <br />
-            Timer Started: <span className="font-medium">{userData?.timer_started ? moment(userData.timer_started).format('MMM DD, YYYY HH:mm:ss') : 'None'}</span>
-          </div>
-        </CardContent>
-      </Card>
+      <MainTaskTimer {...{
+        activeTaskId: userData?.active_task,
+        timerStarted: userData?.timer_started
+      }}/>
       <h1 className="text-3xl font-bold mb-6">Task List</h1>
       <p className="mb-6">Manage your tasks and track their progress.</p>
 

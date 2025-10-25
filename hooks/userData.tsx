@@ -2,7 +2,7 @@ import { supabase } from "@/lib/supabase";
 import moment from "moment";
 import { useEffect, useState } from "react";
 
-interface UserData {
+export interface UserData {
   id: string;
   active_task: number | null;
   timer_started: string | null;  // timestamptz
