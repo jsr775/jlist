@@ -7,7 +7,6 @@ import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, Tabl
 import { ButtonGroup } from "./ui/button-group"
 import { Button } from "./ui/button"
 import { Card, CardContent } from "./ui/card"
-import Timer from "./Timer"
 import useUserData from "@/hooks/userData"
 import MainTaskTimer from "./MainTaskTimer"
 
@@ -195,7 +194,6 @@ const TasksTable = () => {
                       {userData?.active_task === task.id ? <FaStop className="w-4 h-4 text-red-500" /> : <FaPlay className="w-4 h-4 text-green-500" />}
                     </Button>
                   </ButtonGroup>
-                <Timer />
                 </TableCell>
               </TableRow>
             ))

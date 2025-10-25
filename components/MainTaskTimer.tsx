@@ -1,9 +1,8 @@
-import { UserData } from "@/hooks/userData"
+import Timer from "./Timer";
 import { Card, CardContent } from "./ui/card"
 import { Skeleton } from "./ui/skeleton"
 import useTask from "@/hooks/useTask";
 import moment from "moment";
-import { useState } from "react";
 
 interface MainTaskTimerProps {
   activeTaskId?: number | null;
@@ -11,7 +10,7 @@ interface MainTaskTimerProps {
 }
 
 const MainTaskTimer = ({ activeTaskId = null, timerStarted = null }: MainTaskTimerProps) => {
-  const {task: activeTask, isLoading } = useTask({ 
+  const {task: activeTask, isLoading, handleTaskStop, handleTaskStart } = useTask({ 
     taskId: activeTaskId 
   });
 
@@ -27,7 +26,17 @@ const MainTaskTimer = ({ activeTaskId = null, timerStarted = null }: MainTaskTim
           ) : (
             <div className="text-sm text-gray-600">
               {activeTask ? (
+                <>
                   <span className="font-medium">{activeTask.title}</span>
+                  <Timer
+                  {...{
+                    activeTask,
+                    totalTimeElapsed: activeTask?.actual_duration ?? 0,
+                    estimatedDuration: activeTask?.estimated_duration ?? undefined,
+                    onStop: handleTaskStop,
+                    onStart: handleTaskStart
+                  }} />
+                </>
               ) : (
                 'No Active Task'
               )}
