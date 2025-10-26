@@ -2,8 +2,6 @@
 
 import TasksTable from '@/components/TasksTable'
 
-const HomePage = () => {
-  return <TasksTable />
-}
+const HomePage = () => <TasksTable />
 
 export default HomePage
